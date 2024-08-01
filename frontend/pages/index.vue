@@ -29,7 +29,7 @@
 const config = useRuntimeConfig().public;
 
 const endpoints = ref([]);
-onNuxtReady(async () => {
+onMounted(async () => {
 	try {
 		const response = await $fetch(config.API_URL + "/route", {});
 		endpoints.value = response.data;
