@@ -2,6 +2,7 @@ import cors, { CorsOptions } from "cors";
 import express from "express";
 
 import { boot } from "./boot.js";
+import { lowercaseParamsMiddleware } from "./middleware/lowerCase.js";
 
 console.clear();
 
@@ -14,6 +15,8 @@ const corsOptions: CorsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(lowercaseParamsMiddleware);
+
 app.get("/", (req, res) => {
 	res.send("CORS is enabled for all origins!");
 });
