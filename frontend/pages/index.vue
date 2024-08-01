@@ -1,24 +1,26 @@
 <template>
 	<div
-		class="w-full flex flex-col justify-center h-screen overflow-hidden items-center bg-zinc-900"
+		class="w-full flex gap-y-10 flex-col justify-center h-screen overflow-hidden items-center"
 	>
-		<h1 class="text-3xl text-white">Endpoint Listesi</h1>
-		<div
-			v-if="endpoints.length !== 0"
-			class="flex gap-x-10 w-full items-center justify-center mt-5 flex-wrap gap-y-5"
-		>
+		<div v-if="endpoints.length !== 0" class="flex flex-col gap-y-10">
+			<h1 class="text-6xl font-extrabold">Endpoint Listesi</h1>
 			<div
-				class="py-5 min-w-52 px-5 flex items-center justify-center bg-green-400 border-2 border-green-500 rounded-sm group hover:bg-green-600 transition-colors duration-300 cursor-pointer"
-				v-for="endpoint in endpoints"
-				:key="endpoint"
-				@click="navigateTo(endpoint.component)"
+				class="flex gap-x-5 w-full items-center justify-center flex-wrap gap-y-5"
 			>
-				<span class="text-xl select-none">{{ endpoint.endpoint }}</span>
+				<div
+					class="endpointsBtn"
+					v-for="endpoint in endpoints"
+					:key="endpoint"
+					@click="navigateTo(endpoint.endpoint)"
+				>
+					<span class="text-xl select-none">{{
+						endpoint.endpoint
+					}}</span>
+				</div>
 			</div>
 		</div>
-
-		<div v-else class="mt-5">
-			<span class="text-white text-3xl">Yükleniyor...</span>
+		<div v-else>
+			<span class="text-5xl font-extrabold">Yükleniyor...</span>
 		</div>
 	</div>
 </template>
@@ -28,7 +30,17 @@ const config = useRuntimeConfig().public;
 
 const endpoints = ref([]);
 onNuxtReady(async () => {
-	const { data } = await useFetch(`${config.API_URL}/route`, {});
-	endpoints.value = data.value.data;
+	try {
+		const response = await $fetch(config.API_URL + "/route", {});
+		endpoints.value = response.data;
+	} catch (error) {
+		console.log(error);
+	}
 });
 </script>
+
+<style scoped>
+.endpointsBtn {
+	@apply bg-pink-600 min-w-24 flex items-center justify-center py-2 px-3 text-white rounded-md hover:bg-pink-500 cursor-pointer transition-colors duration-300;
+}
+</style>
