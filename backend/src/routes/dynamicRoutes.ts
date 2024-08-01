@@ -48,7 +48,7 @@ router.post("/", async (req: Request, res: Response) => {
 	});
 });
 
-router.put("/", async (req: Request, res: Response) => {
+router.put("/:endpoint", async (req: Request, res: Response) => {
 	if (!req.body || !req.body.endpoint || !req.body.component) {
 		return res.status(400).send({
 			code: 400,
@@ -56,6 +56,14 @@ router.put("/", async (req: Request, res: Response) => {
 		});
 	}
 	const { endpoint, component } = req.body;
+	const { endpoint: oldEndpoint } = req.params;
+
+	if (!(await checkEndpoint(oldEndpoint))) {
+		return res.status(404).send({
+			code: 404,
+			message: "Endpoint not found",
+		});
+	}
 
 	if (!(await checkComponent(component))) {
 		return res.status(409).send({
