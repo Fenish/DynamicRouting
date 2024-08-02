@@ -18,7 +18,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(lowercaseParamsMiddleware);
 
 app.get("/", (req, res) => {
-	res.send("CORS is enabled for all origins!");
+	res.send({
+		code: 200,
+		message: "Dynamic routing API",
+	});
 });
 
 async function main() {
