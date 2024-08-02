@@ -2,12 +2,13 @@
 	<div
 		class="w-full flex gap-y-10 flex-col justify-center h-screen overflow-hidden items-center"
 	>
-		<div v-if="endpoints.length !== 0" class="flex flex-col gap-y-10">
+		<div v-if="success" class="flex flex-col gap-y-10">
 			<h1 class="text-6xl font-extrabold">Endpoint Listesi</h1>
 			<div
 				class="flex gap-x-5 w-full items-center justify-center flex-wrap gap-y-5"
 			>
 				<div
+					v-if="endpoints.length !== 0"
 					class="endpointsBtn"
 					v-for="endpoint in endpoints"
 					:key="endpoint"
@@ -16,6 +17,12 @@
 					<span class="text-xl select-none">{{
 						endpoint.endpoint
 					}}</span>
+				</div>
+
+				<div v-else>
+					<span class="text-3xl font-extrabold text-pink-600">
+						Hiç veri yok
+					</span>
 				</div>
 			</div>
 		</div>
@@ -29,10 +36,13 @@
 const config = useRuntimeConfig().public;
 
 const endpoints = ref([]);
+const success = ref(false);
+
 onMounted(async () => {
 	try {
 		const response = await $fetch(config.API_URL + "/route", {});
 		endpoints.value = response.data;
+		success.value = true;
 	} catch (error) {
 		console.log(error);
 	}
